@@ -28,22 +28,22 @@ and this can be solved using the quadratic formula
 
 bool Sphere::hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const {
     Direction ac = ray.origin() - center;
-    double a = dot(ray.direction(), ray.direction());
+    double a = ray.direction().lenSquared();
     double b = 2 * dot(ray.direction(), ac);
-    double c = dot(ac, ac) - radius*radius;
+    double c = ac.lenSquared() - radius*radius;
     
-    double determinant = b*b - 4*a*c;
+    double discriminant = b*b - 4*a*c;
 
-    if (determinant < 0) return false;
+    if (discriminant < 0) return false;
 
-    double rootLow = -b - sqrt(b*b - 4*a*c);
+    double rootLow = (-b - sqrt(b*b - 4*a*c)) / (2*a);
 
     if (isInRange(rootLow, tMin, tMax)) {
         updateRecord(record, ray, rootLow);
         return true;
     }
 
-    double rootHigh = -b + sqrt(b*b - 4*a*c);
+    double rootHigh = (-b + sqrt(b*b - 4*a*c)) / (2*a);
 
     if (isInRange(rootHigh, tMin, tMax)) {
         updateRecord(record, ray, rootHigh);

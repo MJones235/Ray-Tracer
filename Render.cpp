@@ -17,9 +17,10 @@ Colour rayColour(const Ray& ray, const Hittable& world) {
         return (record.normal + Colour(1,1,1)) / 2;
     }
 
-    double scaledY = ray.direction().normalised().y;
-    // scale from -1 <= y <= 1 to 0 <= scaledY <= 1
-    return Colour(1.0, 1.0, 1.0) * scaledY + Colour(0.5, 0.7, 1.0) * (1 - scaledY);
+    double y = ray.direction().normalised().y;
+    // scale from -1 <= y <= 1 to 0 <= t <= 1
+    double t = (y + 1) / 2;
+    return Colour(1.0, 1.0, 1.0) * (1 - t) + Colour(0.5, 0.7, 1.0) * t;
 }
 
 void render() {
@@ -43,14 +44,14 @@ void render() {
     // world
     HittableList world;
     world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5));
-    world.add(make_shared<Sphere>(Point(0, 105, -1), 100));
+    world.add(make_shared<Sphere>(Point(0,-100.5,-1), 100));
 
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 
-    for (int i = 0; i < imageHeight; i++) {
-        for (int j = 0; j < imageWidth; j++) {
-            double scaledX = double(j) / (imageWidth - 1);
-            double scaledY = double(i) / (imageHeight - 1);
+    for (int j = imageHeight - 1; j >= 0; --j) {
+        for (int i = 0; i < imageWidth; ++i) {
+            double scaledX = double(i) / (imageWidth - 1);
+            double scaledY = double(j) / (imageHeight - 1);
             Ray ray(origin, lowerLeftCorner + xAxis * scaledX + yAxis * scaledY - origin);
             Colour colour = rayColour(ray, world);
             writeColour(std::cout, colour);
