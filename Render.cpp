@@ -6,16 +6,19 @@
 #include <iostream>
 
 Colour rayColour(const Ray& ray, double viewportHeight) {
-    if (Sphere(Point(0, 0, -1), 0.5).hit(ray)) {
-        return Colour(1, 0, 0);
+    Sphere sphere(Point(0, 0, -1), 0.5);
+    double t = sphere.hit(ray);
+    if (t > 0) {
+        Direction N = sphere.surfaceNormal(ray.pointAtT(t));
+        return Colour(N.x+1, N.y+1, N.z+1) / 2;
     }
 
     double y = ray.normalisedDirection().y;
     
-    // scale from -1 <= y <= 1 to 0 <= t <= 1
-    double t = (y + 1) / 2;
+    // scale from -1 <= y <= 1 to 0 <= scaledY <= 1
+    double scaledY = (y + 1) / 2;
 
-    return Colour(1, 1, 1)*t + Colour(0.5, 0.7, 1.0)*(1 - t);
+    return Colour(1, 1, 1)*scaledY + Colour(0.5, 0.7, 1.0)*(1 - scaledY);
 }
 
 void render() {

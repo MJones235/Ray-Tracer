@@ -1,6 +1,7 @@
 #include "Sphere.h"
 #include "Ray.h"
 #include "Vector3D.h"
+#include <math.h>
 
 /*
 
@@ -20,7 +21,7 @@ and this can be solved using the quadratic formula
 
 */
 
-bool Sphere::hit(const Ray& ray) const {
+double Sphere::hit(const Ray& ray) const {
     Direction ac = ray.origin() - center;
     double a = dot(ray.direction(), ray.direction());
     double b = 2 * dot(ray.direction(), ac);
@@ -28,5 +29,7 @@ bool Sphere::hit(const Ray& ray) const {
     
     double determinant = b*b - 4*a*c;
 
-    return determinant >= 0;
+    if (determinant < 0) return -1;
+
+    return (-b - sqrt(b*b - 4*a*c)) / (2*a);
 }

@@ -9,7 +9,11 @@ class Sphere : public Hitable {
     public:
         Sphere() = default;
         Sphere(Point c, double r) : center{c}, radius{r} {};
-        bool hit(const Ray& ray) const override;
+        double hit(const Ray& ray) const override;
+
+        Direction surfaceNormal(Point point) {
+            return (point - center).normalised();
+        }
 
     private:
         Point center {Point(0, 0, 0)};
