@@ -19,7 +19,7 @@ Colour rayColour(const Ray& ray, const Hittable& world, int depth) {
 
     if (world.hit(ray, 0, infinity, record)) {
         Point target = record.point + record.normal + randomVectorInUnitSphere();
-        return rayColour(Ray(record.point, target - record.point), world, depth - 1);
+        return rayColour(Ray(record.point, target - record.point), world, depth - 1) / 2;
     }
 
     // scale from -1 <= y <= 1 to 0 <= t <= 1
