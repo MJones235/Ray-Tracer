@@ -13,6 +13,8 @@ struct Vector {
     Vector() {}
     Vector(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
+    inline Vector operator-() const { return Vector(-x, -y, -z); }
+
     double len() const;
     double lenSquared() const;
     Vector normalised() const;

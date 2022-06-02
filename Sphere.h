@@ -3,21 +3,24 @@
 
 #include "Ray.h"
 #include "Vector3D.h"
-#include "Hitable.h"
+#include "Hittable.h"
 
-class Sphere : public Hitable {
+class Sphere : public Hittable {
     public:
-        Sphere() = default;
+        Sphere() {};
         Sphere(Point c, double r) : center{c}, radius{r} {};
-        double hit(const Ray& ray) const override;
+        
+        bool hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const override;
 
-        Direction surfaceNormal(Point point) {
+        Direction surfaceNormal(Point point) const {
             return (point - center).normalised();
         }
 
     private:
         Point center {Point(0, 0, 0)};
         double radius {0.0};
+
+        void updateRecord(HitRecord& record, const Ray& ray, double t) const;
 };
 
 #endif

@@ -3,6 +3,11 @@
 #include "Vector3D.h"
 #include <math.h>
 
+
+bool isInRange(double value, double min, double max) {
+    return value >= min && value <= max;
+}
+
 /*
 
 Ray hits surface of sphere if there is a value, t, that satisfies
@@ -21,7 +26,7 @@ and this can be solved using the quadratic formula
 
 */
 
-double Sphere::hit(const Ray& ray) const {
+bool Sphere::hit(const Ray& ray, double tMin, double tMax, HitRecord& record) const {
     Direction ac = ray.origin() - center;
     double a = dot(ray.direction(), ray.direction());
     double b = 2 * dot(ray.direction(), ac);
@@ -29,7 +34,29 @@ double Sphere::hit(const Ray& ray) const {
     
     double determinant = b*b - 4*a*c;
 
-    if (determinant < 0) return -1;
+    if (determinant < 0) return false;
 
-    return (-b - sqrt(b*b - 4*a*c)) / (2*a);
+    double rootLow = -b - sqrt(b*b - 4*a*c);
+
+    if (isInRange(rootLow, tMin, tMax)) {
+        updateRecord(record, ray, rootLow);
+        return true;
+    }
+
+    double rootHigh = -b + sqrt(b*b - 4*a*c);
+
+    if (isInRange(rootHigh, tMin, tMax)) {
+        updateRecord(record, ray, rootHigh);
+        return true;
+    }
+
+    return false;
+};
+
+void Sphere::updateRecord(HitRecord& record, const Ray& ray, double t) const {
+    Point hitPoint = ray.pointAtT(t);
+            
+    record.t = t;
+    record.point = hitPoint;
+    record.setSurfaceNormal(ray, surfaceNormal(hitPoint));
 }
