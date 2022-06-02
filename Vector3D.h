@@ -82,6 +82,10 @@ inline Vector randomVectorInUnitSphere() {
     }
 }
 
+inline Vector randomNormalisedVectorInUnitSphere() {
+    return randomVectorInUnitSphere().normalised();
+}
+
 
 using Colour = Vector;
 using Point = Vector;
