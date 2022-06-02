@@ -15,6 +15,8 @@ struct Vector {
 
     inline Vector operator-() const { return Vector(-x, -y, -z); }
 
+    Vector& operator+=(const Vector& v);
+
     double len() const;
     double lenSquared() const;
     Vector normalised() const;
@@ -49,6 +51,13 @@ inline Vector operator+(const Vector &u, const Vector &v) {
 
 inline Vector operator-(const Vector &u, const Vector &v) {
     return Vector(u.x - v.x, u.y - v.y, u.z - v.z);
+}
+
+inline Vector& Vector::operator+=(const Vector &v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    return *this;
 }
 
 inline double dot(const Vector &u, const Vector &v) {

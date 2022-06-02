@@ -1,12 +1,8 @@
 #include "Sphere.h"
 #include "Ray.h"
 #include "Vector3D.h"
+#include "Utils.h"
 #include <math.h>
-
-
-bool isInRange(double value, double min, double max) {
-    return value >= min && value <= max;
-}
 
 /*
 

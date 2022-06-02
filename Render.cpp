@@ -1,4 +1,5 @@
 #include "Render.h"
+#include "Camera.h"
 #include "Colour.h"
 #include "Constants.h"
 #include "Hittable.h"
@@ -17,9 +18,10 @@ Colour rayColour(const Ray& ray, const Hittable& world) {
         return (record.normal + Colour(1,1,1)) / 2;
     }
 
-    double y = ray.direction().normalised().y;
     // scale from -1 <= y <= 1 to 0 <= t <= 1
+    double y = ray.direction().normalised().y;
     double t = (y + 1) / 2;
+
     return Colour(1.0, 1.0, 1.0) * (1 - t) + Colour(0.5, 0.7, 1.0) * t;
 }
 
@@ -28,18 +30,10 @@ void render() {
     const double aspectRatio = 16.0 / 9.0;
     const int imageWidth = 600;
     const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
+    const int samplesPerPixel = 100;
 
-    // camera constants
-    const double viewportHeight = 2.0;
-    const double viewportWidth = viewportHeight * aspectRatio;
-    const double focalLength = 1.0;
-
-    // axes
-    const Point origin = Point(0, 0, 0);
-    const Direction xAxis = Direction(viewportWidth, 0, 0);
-    const Direction yAxis = Direction(0, viewportHeight, 0);
-    const Direction zAxis = Direction(0, 0, focalLength);
-    const Point lowerLeftCorner = origin - xAxis/2 - yAxis/2 - zAxis;
+    // camera
+    Camera camera;
 
     // world
     HittableList world;
@@ -50,11 +44,14 @@ void render() {
 
     for (int j = imageHeight - 1; j >= 0; --j) {
         for (int i = 0; i < imageWidth; ++i) {
-            double scaledX = double(i) / (imageWidth - 1);
-            double scaledY = double(j) / (imageHeight - 1);
-            Ray ray(origin, lowerLeftCorner + xAxis * scaledX + yAxis * scaledY - origin);
-            Colour colour = rayColour(ray, world);
-            writeColour(std::cout, colour);
+            Colour pixelColour(0, 0 ,0);
+            for (int s = 0; s < samplesPerPixel; ++s) {
+                double scaledX = (i + randomDouble()) / (imageWidth - 1);
+                double scaledY = (j + randomDouble()) / (imageHeight - 1);
+                Ray ray = camera.getRay(scaledX, scaledY);
+                pixelColour += rayColour(ray, world);
+            }
+            writeColour(std::cout, pixelColour, samplesPerPixel);
         }
     }
 }
