@@ -1,10 +1,15 @@
 #include "Render.h"
 #include "Colour.h"
 #include "Ray.h"
+#include "Sphere.h"
 #include "Vector3D.h"
 #include <iostream>
 
 Colour rayColour(const Ray& ray, double viewportHeight) {
+    if (Sphere(Point(0, 0, -1), 0.5).hit(ray)) {
+        return Colour(1, 0, 0);
+    }
+
     double y = ray.normalisedDirection().y;
     
     // scale from -1 <= y <= 1 to 0 <= t <= 1

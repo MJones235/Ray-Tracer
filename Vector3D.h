@@ -49,6 +49,10 @@ inline Vector operator-(const Vector &u, const Vector &v) {
     return Vector(u.x - v.x, u.y - v.y, u.z - v.z);
 }
 
+inline double dot(const Vector &u, const Vector &v) {
+    return u.x * v.x + u.y * v.y + u.z * v.z;
+}
+
 
 using Colour = Vector;
 using Point = Vector;
