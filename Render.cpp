@@ -17,7 +17,7 @@ Colour rayColour(const Ray& ray, const Hittable& world, int depth) {
 
     if (depth <= 0) return Colour(0, 0, 0);
 
-    if (world.hit(ray, 0, infinity, record)) {
+    if (world.hit(ray, 0.001, infinity, record)) {
         Point target = record.point + record.normal + randomVectorInUnitSphere();
         return rayColour(Ray(record.point, target - record.point), world, depth - 1) / 2;
     }
