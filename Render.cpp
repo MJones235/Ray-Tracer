@@ -12,10 +12,14 @@
 
 using std::make_shared;
 
-Colour rayColour(const Ray& ray, const Hittable& world) {
+Colour rayColour(const Ray& ray, const Hittable& world, int depth) {
     HitRecord record;
+
+    if (depth <= 0) return Colour(0, 0, 0);
+
     if (world.hit(ray, 0, infinity, record)) {
-        return (record.normal + Colour(1,1,1)) / 2;
+        Point target = record.point + record.normal + randomVectorInUnitSphere();
+        return rayColour(Ray(record.point, target - record.point), world, depth - 1);
     }
 
     // scale from -1 <= y <= 1 to 0 <= t <= 1
@@ -28,9 +32,10 @@ Colour rayColour(const Ray& ray, const Hittable& world) {
 void render() {
     // image dimensions
     const double aspectRatio = 16.0 / 9.0;
-    const int imageWidth = 600;
+    const int imageWidth = 400;
     const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
     const int samplesPerPixel = 100;
+    const int maxDepth = 50;
 
     // camera
     Camera camera;
@@ -43,15 +48,17 @@ void render() {
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 
     for (int j = imageHeight - 1; j >= 0; --j) {
+        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < imageWidth; ++i) {
             Colour pixelColour(0, 0 ,0);
             for (int s = 0; s < samplesPerPixel; ++s) {
                 double scaledX = (i + randomDouble()) / (imageWidth - 1);
                 double scaledY = (j + randomDouble()) / (imageHeight - 1);
                 Ray ray = camera.getRay(scaledX, scaledY);
-                pixelColour += rayColour(ray, world);
+                pixelColour += rayColour(ray, world, maxDepth);
             }
             writeColour(std::cout, pixelColour, samplesPerPixel);
         }
     }
+    std::cerr << "Done!" << '\n';
 }

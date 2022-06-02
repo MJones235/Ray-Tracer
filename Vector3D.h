@@ -4,6 +4,8 @@
 #include <iostream>
 #include <math.h>
 
+#include "Utils.h"
+
 struct Vector {
 
     double x {0};
@@ -12,6 +14,14 @@ struct Vector {
 
     Vector() {}
     Vector(double x, double y, double z) : x{x}, y{y}, z{z} {}
+
+    inline static Vector random() {
+        return Vector(randomDouble(), randomDouble(), randomDouble());
+    }
+
+    inline static Vector random(double min, double max) {
+        return Vector(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
+    }
 
     inline Vector operator-() const { return Vector(-x, -y, -z); }
 
@@ -62,6 +72,14 @@ inline Vector& Vector::operator+=(const Vector &v) {
 
 inline double dot(const Vector &u, const Vector &v) {
     return u.x * v.x + u.y * v.y + u.z * v.z;
+}
+
+inline Vector randomVectorInUnitSphere() {
+    while (true) {
+        Vector random = Vector::random(-1, 1);
+        if (random.lenSquared() <= 1) return random;
+        else continue;
+    }
 }
 
 

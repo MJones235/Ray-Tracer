@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include "Constants.h"
 #include <cstdlib>
 
@@ -16,7 +19,14 @@ inline double randomDouble() {
     return rand() / (RAND_MAX + 1.0);
 }
 
+// return a random double in range [min, max)
+inline double randomDouble(double min, double max) {
+    return min + (max - min)*randomDouble();
+}
+
 inline double degreesToRadians(double degrees) {
     return degrees * pi / 180.0;
 }
+
+#endif
 

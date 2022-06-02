@@ -7,10 +7,10 @@
 class Camera {
     public:
         Camera() {
-            auto aspectRatio = 16.0 / 9.0;
-            auto viewportHeight = 2.0;
-            auto viewportWidth = aspectRatio * viewportHeight;
-            auto focalLength = 1.0;
+            double aspectRatio = 16.0 / 9.0;
+            double viewportHeight = 2.0;
+            double viewportWidth = aspectRatio * viewportHeight;
+            double focalLength = 1.0;
 
             origin = Point(0, 0, 0);
             xAxis = Direction(viewportWidth, 0.0, 0.0);
