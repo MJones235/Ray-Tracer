@@ -50,9 +50,9 @@ void render() {
     HittableList world;
 
     shared_ptr<Lambertian> materialGround = make_shared<Lambertian>(Colour(0.8, 0.8, 0.0));
-    shared_ptr<Dielectric> materialCenter = make_shared<Dielectric>(1.5);
-    shared_ptr<Metal> materialLeft   = make_shared<Metal>(Colour(0.8, 0.8, 0.8), 0.3);
-    shared_ptr<Metal> materialRight  = make_shared<Metal>(Colour(0.8, 0.6, 0.2), 1);
+    shared_ptr<Lambertian> materialCenter = make_shared<Lambertian>(Colour(0.1, 0.2, 0.5));
+    shared_ptr<Dielectric> materialLeft   = make_shared<Dielectric>(1.5);
+    shared_ptr<Metal> materialRight  = make_shared<Metal>(Colour(0.8, 0.6, 0.2), 0);
 
     world.add(make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, materialGround));
     world.add(make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, materialCenter));

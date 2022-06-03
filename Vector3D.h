@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <cmath>
 #include <math.h>
 
 #include "Utils.h"
@@ -98,12 +99,21 @@ inline Vector randomNormalisedVectorInUnitSphere() {
     return randomVectorInUnitSphere().normalised();
 }
 
+inline double getCosTheta(const Vector& u, const Vector& v) {
+    return fmin(dot(u.normalised(), v.normalised()), 1);
+}
+
+inline double getSinTheta(const Vector& u, const Vector& v) {
+    double cosTheta = getCosTheta(u, v);
+    return sqrt(1 - cosTheta * cosTheta);
+}
+
 inline Vector reflect(const Vector& v, const Vector& n) {
     return v - 2*dot(v, n)*n;
 }
 
 inline Vector refract(const Vector& v, const Vector& n, double ratioRefractiveIndex) {
-    double cosTheta = fmin(dot(-v, n), 1);
+    double cosTheta = getCosTheta(-v, n);
     Vector rOutPerp = ratioRefractiveIndex * (v + cosTheta*n);
     Vector rOutParallel = -sqrt(fabs(1 - rOutPerp.lenSquared())) * n;
     return rOutParallel + rOutPerp;

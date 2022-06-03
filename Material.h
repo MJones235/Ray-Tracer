@@ -86,8 +86,18 @@ class Dielectric : public Material {
         ) const override {
             attenuation = Colour(1, 1, 1);
             double refractionRatio = record.outerSurface ? 1 / refractiveIndex : refractiveIndex;
-            Direction refracted = refract(rayIn.normalisedDirection(), record.normal, refractionRatio);
-            scattered = Ray(record.point, refracted);
+
+            double cosTheta = getCosTheta(-rayIn.normalisedDirection(), record.normal);
+            double sinTheta = getSinTheta(-rayIn.normalisedDirection(), record.normal);
+
+            bool cannotRefract = refractionRatio * sinTheta > 1;
+            
+            Direction direction = cannotRefract 
+                ? reflect(rayIn.normalisedDirection(), record.normal) 
+                : refract(rayIn.normalisedDirection(), record.normal, refractionRatio);
+
+            
+            scattered = Ray(record.point, direction);
             return true;
         }
 
