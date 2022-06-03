@@ -55,4 +55,5 @@ void Sphere::updateRecord(HitRecord& record, const Ray& ray, double t) const {
     record.t = t;
     record.point = hitPoint;
     record.setSurfaceNormal(ray, surfaceNormal(hitPoint));
+    record.materialPtr = materialPtr;
 }

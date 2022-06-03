@@ -3,18 +3,7 @@
 
 #include "Ray.h"
 #include "Vector3D.h"
-
-struct HitRecord {
-    Point point;
-    Direction normal;
-    double t;
-    bool outerSurface;
-
-    inline void setSurfaceNormal(const Ray& ray, const Direction& outwardNormal) {
-        outerSurface = dot(ray.direction(), outwardNormal) < 0;
-        normal = outerSurface ? outwardNormal : -outwardNormal;
-    }
-};
+#include "Material.h"
 
 
 class Hittable {

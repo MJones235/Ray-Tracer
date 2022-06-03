@@ -18,8 +18,13 @@ Colour rayColour(const Ray& ray, const Hittable& world, int depth) {
     if (depth <= 0) return Colour(0, 0, 0);
 
     if (world.hit(ray, 0.001, infinity, record)) {
-        Point target = record.point + record.normal + randomNormalisedVectorInUnitSphere();
-        return rayColour(Ray(record.point, target - record.point), world, depth - 1) / 2;
+        Ray scattered;
+        Colour attenuation;
+        if (record.materialPtr->scatter(ray, record, attenuation, scattered)) {
+            return attenuation * rayColour(scattered, world, depth - 1);
+        } else {
+            return Colour(0, 0, 0);
+        }
     }
 
     // scale from -1 <= y <= 1 to 0 <= t <= 1
@@ -42,8 +47,16 @@ void render() {
 
     // world
     HittableList world;
-    world.add(make_shared<Sphere>(Point(0, 0, -1), 0.5));
-    world.add(make_shared<Sphere>(Point(0,-100.5,-1), 100));
+
+    shared_ptr<Lambertian> materialGround = make_shared<Lambertian>(Colour(0.8, 0.8, 0.0));
+    shared_ptr<Lambertian> materialCenter = make_shared<Lambertian>(Colour(0.7, 0.3, 0.3));
+    shared_ptr<Metal> materialLeft   = make_shared<Metal>(Colour(0.8, 0.8, 0.8));
+    shared_ptr<Metal> materialRight  = make_shared<Metal>(Colour(0.8, 0.6, 0.2));
+
+    world.add(make_shared<Sphere>(Point( 0.0, -100.5, -1.0), 100.0, materialGround));
+    world.add(make_shared<Sphere>(Point( 0.0,    0.0, -1.0),   0.5, materialCenter));
+    world.add(make_shared<Sphere>(Point(-1.0,    0.0, -1.0),   0.5, materialLeft));
+    world.add(make_shared<Sphere>(Point( 1.0,    0.0, -1.0),   0.5, materialRight));
 
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 

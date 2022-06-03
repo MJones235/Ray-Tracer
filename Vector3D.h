@@ -30,6 +30,11 @@ struct Vector {
     double len() const;
     double lenSquared() const;
     Vector normalised() const;
+
+    inline bool isNearZero() const {
+        const double s = 2e-8;
+        return len() < s;
+    }
 };
 
 inline double Vector::lenSquared() const {
@@ -49,6 +54,10 @@ inline Vector operator*(const Vector &vector, const double scalar) {
     return Vector(vector.x*scalar, vector.y*scalar, vector.z*scalar);
 }
 
+inline Vector operator*(const double scalar, const Vector &vector) {
+    return Vector(vector.x*scalar, vector.y*scalar, vector.z*scalar);
+}
+
 inline Vector operator/(const Vector &vector, const double scalar) {
     if (scalar == 0) return Vector();
 
@@ -61,6 +70,10 @@ inline Vector operator+(const Vector &u, const Vector &v) {
 
 inline Vector operator-(const Vector &u, const Vector &v) {
     return Vector(u.x - v.x, u.y - v.y, u.z - v.z);
+}
+
+inline Vector operator*(const Vector &u, const Vector &v) {
+    return Vector(u.x * v.x, u.y * v.y, u.z * v.z);
 }
 
 inline Vector& Vector::operator+=(const Vector &v) {
@@ -84,6 +97,10 @@ inline Vector randomVectorInUnitSphere() {
 
 inline Vector randomNormalisedVectorInUnitSphere() {
     return randomVectorInUnitSphere().normalised();
+}
+
+inline Vector reflect(const Vector& v, const Vector& n) {
+    return v - 2*dot(v, n)*n;
 }
 
 
