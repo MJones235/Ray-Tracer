@@ -1,7 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <iostream>
 #include <math.h>
 
 #include "Utils.h"
@@ -101,6 +100,13 @@ inline Vector randomNormalisedVectorInUnitSphere() {
 
 inline Vector reflect(const Vector& v, const Vector& n) {
     return v - 2*dot(v, n)*n;
+}
+
+inline Vector refract(const Vector& v, const Vector& n, double ratioRefractiveIndex) {
+    double cosTheta = fmin(dot(-v, n), 1);
+    Vector rOutPerp = ratioRefractiveIndex * (v + cosTheta*n);
+    Vector rOutParallel = -sqrt(fabs(1 - rOutPerp.lenSquared())) * n;
+    return rOutParallel + rOutPerp;
 }
 
 
